@@ -1,0 +1,37 @@
+<html>
+<head>
+
+</head>
+<body>
+<div ng-app="SharePointAngApp" class="row">
+    <div ng-controller="spCustomerController" class="span10">
+		<p><input type="text" ng-model="test"></p>
+		<table class="table table-condensed table-hover">
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+            </tr>
+            <tr ng-repeat="customer in customers | filter:test ">
+				<td>{{customer.Cells.results[3].Value}}</td>
+                <td>{{customer.Cells.results[4].Value}}</td>
+            </tr>
+        </table>
+    </div>
+</div>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular.js"></script>
+<script src="/_layouts/15/paulhastings/Scripts/bootstrap.min.js"></script>
+<script>
+    var webSiteURL = "http://laxfarmapp2d:1500";
+    var myAngApp = angular.module('SharePointAngApp', []);
+    myAngApp.controller('spCustomerController', function ($scope, $http) {
+        $http({
+            method: 'GET',
+            url: "http://laxfarmapp2d:1500/_api/search/query?querytext='path:\"http://laxfarmapp2d:1500/administrative/businessdevelopment/publications\"  (IsDocument:\"True\" OR contentclass:\"STS_ListItem\")'&rowlimit=100",
+            headers: { "Accept": "application/json;odata=verbose" }
+        }).success(function (d, s, h, c) {
+            $scope.customers = d.d.query.PrimaryQueryResult.RelevantResults.Table.Rows.results;
+        });
+    });
+</script>
+</body>
+</html>
