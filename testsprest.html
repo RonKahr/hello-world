@@ -5,13 +5,13 @@
 <body>
 <div ng-app="SharePointAngApp" class="row">
     <div ng-controller="spCustomerController" class="span10">
-		<p><input type="text" ng-model="test"></p>
+		<p><input type="text" ng-model="search.Cells.results[3]"></p>
 		<table class="table table-condensed table-hover">
             <tr>
                 <th>Title</th>
                 <th>Author</th>
             </tr>
-            <tr ng-repeat="customer in customers | filter:test ">
+            <tr ng-repeat="customer in customers | filter:search | orderBy:'Cells.results[3].Value'"">
 				<td>{{customer.Cells.results[3].Value}}</td>
                 <td>{{customer.Cells.results[4].Value}}</td>
             </tr>
@@ -28,8 +28,8 @@
             method: 'GET',
             url: "http://laxfarmapp2d:1500/_api/search/query?querytext='path:\"http://laxfarmapp2d:1500/administrative/businessdevelopment/publications\"  (IsDocument:\"True\" OR contentclass:\"STS_ListItem\")'&rowlimit=100",
             headers: { "Accept": "application/json;odata=verbose" }
-        }).success(function (d, s, h, c) {
-            $scope.customers = d.d.query.PrimaryQueryResult.RelevantResults.Table.Rows.results;
+        }).success(function (response) {
+            $scope.customers = response.d.query.PrimaryQueryResult.RelevantResults.Table.Rows.results;
         });
     });
 </script>
